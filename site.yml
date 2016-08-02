@@ -1,0 +1,6 @@
+---
+
+- hosts: mes-aides
+  become: true
+  roles:
+    - mongodb

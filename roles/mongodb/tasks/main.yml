@@ -1,0 +1,14 @@
+- name: add apt keys
+  apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10
+
+- name: add repository
+  apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
+
+- name: install mongodb
+  apt: name=mongodb-org update_cache=yes
+
+- name: register as systemd service
+  copy: src=files/mongodb.service dest=/etc/systemd/system/mongodb.service
+
+- name: ensure service is started
+  service: name=mongodb state=started
