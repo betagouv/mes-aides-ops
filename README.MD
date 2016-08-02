@@ -8,17 +8,9 @@ Test localy
 -----------
 
  * Run vagrant `vagrant up`
- * Add this to `~/.ssh/config`
+ * Run `ansible-galaxy install -r requirements.yml` to install dependencies
  * Run ansible `ansible-playbook -i inventories/local site.yml`
 
-
-### Chiffrer un certificat à déployer
-
-`openssl aes-256-cbc -a -in mon.cert -out mon.cert.enc`
-
-utiliser le mot de passe qui est dans secrets/reverse_proxy.yml
-
-`ansible-vault edit secrets/reverse_proxy.yml`
 
 
 Deploy on production
