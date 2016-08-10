@@ -1,0 +1,7 @@
+---
+  - name: get Mes aides code
+    git:
+      repo: https://github.com/sgmap/mes-aides-ui.git
+      dest: "{{ mes_aides.path }}"
+      version: "{{ mes_aides.version }}"
+    tags: mes_aides

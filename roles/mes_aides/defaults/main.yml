@@ -1,0 +1,4 @@
+mes_aides:
+  name: mes_aides
+  version: master
+  path: /srv/mes_aides
