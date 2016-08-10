@@ -1,0 +1,5 @@
+- name: check nginx conf
+  shell: nginx -t -c {{ nginx_config_file }}
+
+- name: restart nginx
+  service: name=nginx state=restarted

@@ -1,0 +1,2 @@
+nginx_path: /etc/nginx
+nginx_config_file: "{{ nginx_path }}/nginx.conf"
