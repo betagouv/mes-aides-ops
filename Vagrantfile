@@ -2,9 +2,9 @@
 # vi: set ft=ruby :
 
 vms = {
-  :mesAide =>
-    { :ip => '192.168.56.134',
-      :name => 'mesAide'
+  mes_aides:
+    { ip: '192.168.56.134',
+      name: 'mes_aides'
     }
 }
 
@@ -19,12 +19,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/xenial64"
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.box = 'ubuntu/xenial64'
+  config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.provision 'shell', inline: <<-SHELL
-    sudo mkdir -p /home/ubuntu/.ssh -m 700
+    sudo mkdir -p /home/ubuntu/.ssh -m 700  # not sure sudo is needed
     sudo echo '#{ssh_pubkey}' >> /home/ubuntu/.ssh/authorized_keys
+    apt-get update
+    apt-get -y upgrade
+    apt-get install -y python
   SHELL
 
   # Create a forwarded port mapping which allows access to a specific port
@@ -32,17 +35,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
 
-  config.vm.provider "virtualbox" do |v|
-    v.cpus = 1
-    v.gui = false
+  config.vm.provider 'virtualbox' do |box|
+    box.cpus = 1
+    box.gui = false
   end
 
   vms.each_pair do |key, vm|
     config.vm.define key do |configvm|
       configvm.vm.network 'private_network', ip: vm[:ip]
-      configvm.vm.provider 'virtualbox' do |vb|
-        vb.memory = vm[:memory] || '512'
-        vb.name = vm[:name]
+      configvm.vm.provider 'virtualbox' do |box|
+        box.memory = vm[:memory] || '512'
+        box.name = vm[:name]
       end
     end
   end
