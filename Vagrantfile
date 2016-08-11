@@ -10,6 +10,8 @@ vms = {
 
 ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 
+Vagrant.require_version ">= 1.7.0"
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -25,6 +27,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     apt-get install -y python
   SHELL
 
+  config.vm.provision 'ansible' do |ansible|
+    ansible.playbook = './site.yml'
+    ansible.inventory_path = './inventories/local'
+    ansible.sudo = true
+    ansible.verbose ='v'
   end
 
   vms.each_pair do |key, vm|
