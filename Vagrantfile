@@ -1,6 +1,3 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
 vms = {
   mes_aides:
     { ip: '192.168.56.134',
