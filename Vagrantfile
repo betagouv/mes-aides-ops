@@ -9,10 +9,7 @@ ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 
 Vagrant.require_version ">= 1.7.0"
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
-
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure(2) do |config|
   config.vm.box = 'ubuntu/xenial64'
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
