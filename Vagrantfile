@@ -1,7 +1,7 @@
+Vagrant.require_version ">= 1.7.0"  # for Ansible provisioner
 
 ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 
-Vagrant.require_version ">= 1.7.0"
 
 Vagrant.configure(2) do |config|
   config.vm.box = 'ubuntu/xenial64'
@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
     sudo echo '#{ssh_pubkey}' >> /home/ubuntu/.ssh/authorized_keys
     apt-get update
     apt-get -y upgrade
-    apt-get install -y python
+    apt-get install -y python  # xenial64 comes with Python3, Ansible needs Python2.7
   SHELL
 
   config.vm.provision 'ansible' do |ansible|
