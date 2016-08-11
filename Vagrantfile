@@ -2,6 +2,7 @@ Vagrant.require_version ">= 1.7.0"  # for Ansible provisioner
 
 ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 
+ENV['LC_ALL'] = 'en_US.UTF-8'  # Vagrant passes host locale to guest, but guest machine does not have locale installed. Avoid complaints about it.
 
 Vagrant.configure(2) do |config|
   config.vm.box = 'ubuntu/xenial64'
