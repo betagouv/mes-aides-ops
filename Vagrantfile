@@ -1,9 +1,3 @@
-vms = {
-  mes_aides:
-    { ip: '192.168.56.134',
-      name: 'mes_aides'
-    }
-}
 
 ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 
@@ -12,6 +6,10 @@ Vagrant.require_version ">= 1.7.0"
 Vagrant.configure(2) do |config|
   config.vm.box = 'ubuntu/xenial64'
   config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.network 'private_network', ip: '192.168.56.134'
+  config.vm.provider 'virtualbox' do |vbox|
+    vbox.name = 'mes_aides'
+  end
 
   config.vm.provision 'shell', inline: <<-SHELL
     sudo mkdir -p /home/ubuntu/.ssh -m 700  # not sure sudo is needed
@@ -28,13 +26,4 @@ Vagrant.configure(2) do |config|
     ansible.verbose ='v'
   end
 
-  vms.each_pair do |key, vm|
-    config.vm.define key do |configvm|
-      configvm.vm.network 'private_network', ip: vm[:ip]
-      configvm.vm.provider 'virtualbox' do |box|
-        box.memory = vm[:memory] || '512'
-        box.name = vm[:name]
-      end
-    end
-  end
 end
