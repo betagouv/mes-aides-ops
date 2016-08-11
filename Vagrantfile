@@ -14,11 +14,6 @@ ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = 'ubuntu/xenial64'
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
@@ -30,14 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     apt-get install -y python
   SHELL
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-
-
-  config.vm.provider 'virtualbox' do |box|
-    box.cpus = 1
-    box.gui = false
   end
 
   vms.each_pair do |key, vm|
