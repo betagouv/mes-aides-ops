@@ -8,6 +8,7 @@ Vagrant.configure(2) do |config|
   config.vm.network 'private_network', ip: '192.168.56.134'
   config.vm.provider 'virtualbox' do |vbox|
     vbox.name = 'mes_aides'
+    vbox.linked_clone = true if Vagrant::VERSION =~ /^1.8/  # do not duplicate the base image
   end
 
   config.vm.provision 'shell', inline: <<-SHELL
