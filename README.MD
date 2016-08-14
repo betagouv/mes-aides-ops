@@ -1,7 +1,12 @@
-Infrastructure
-==============
+Set up the [Mes Aides](https://mes-aides.gouv.fr) stack.
 
-This is a ansible repository to deploy the system mes-aides
+> Déploie l'infrastructure de Mes Aides.
+
+
+In all cases
+------------
+
+1. Install [Ansible](http://www.ansible.com).
 
 
 Test locally
