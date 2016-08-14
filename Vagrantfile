@@ -1,7 +1,5 @@
 Vagrant.require_version ">= 1.7.0"  # for Ansible provisioner
 
-ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
-
 ENV['LC_ALL'] = 'en_US.UTF-8'  # Vagrant passes host locale to guest, but guest machine does not have locale installed. Avoid complaints about it.
 
 Vagrant.configure(2) do |config|
@@ -12,9 +10,9 @@ Vagrant.configure(2) do |config|
     vbox.linked_clone = true if Vagrant::VERSION =~ /^1.8/  # do not duplicate the base image
   end
 
+  config.vm.provision 'file', source: '~/.ssh/id_rsa.pub', destination: '~/.ssh/authorized_keys'
+
   config.vm.provision 'shell', inline: <<-SHELL
-    sudo mkdir -p /home/ubuntu/.ssh -m 700  # not sure sudo is needed
-    sudo echo '#{ssh_pubkey}' >> /home/ubuntu/.ssh/authorized_keys
     apt-get update
     apt-get -y upgrade
     apt-get install -y python  # xenial64 comes with Python3, Ansible needs Python2.7
