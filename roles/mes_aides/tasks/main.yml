@@ -4,6 +4,7 @@
       repo: https://github.com/sgmap/mes-aides-ui.git
       dest: "{{ mes_aides.path }}"
       version: "{{ mes_aides.version }}"
+      depth: 1
     tags: mes_aides
 
   - name: Start Mes Aides
