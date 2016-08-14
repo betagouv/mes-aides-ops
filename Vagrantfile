@@ -10,8 +10,6 @@ Vagrant.configure(2) do |config|
     vbox.linked_clone = true if Vagrant::VERSION =~ /^1.8/  # do not duplicate the base image
   end
 
-  config.vm.provision 'file', source: '~/.ssh/id_rsa.pub', destination: '~/.ssh/authorized_keys'
-
   config.vm.provision 'shell', inline: <<-SHELL
     apt-get update
     apt-get -y upgrade
