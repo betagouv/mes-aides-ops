@@ -11,4 +11,4 @@
   copy: src=files/mongodb.service dest=/etc/systemd/system/mongodb.service
 
 - name: ensure service is started
-  service: name=mongodb state=started
+  service: name=mongod state=started
