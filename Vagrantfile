@@ -13,10 +13,9 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision 'ansible' do |ansible|
-    ansible.playbook = './site.yml'
-    ansible.inventory_path = './inventories/local'
+    ansible.playbook = 'site.yml'
     ansible.sudo = true
     ansible.verbose ='v'
+    ansible.host_vars = { mes_aides: { ansible_user: 'ubuntu' } }  # to be removed once https://github.com/mitchellh/vagrant/issues/7552 is fixed
   end
-
 end

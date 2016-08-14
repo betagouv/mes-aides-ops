@@ -13,6 +13,8 @@ Test locally
 
 To run your updated Ansible playbook, run `vagrant provision`.
 
+> For faster runs, if you iterate often, run: `ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory site.yml` ([source](http://docs.ansible.com/ansible/guide_vagrant.html#running-ansible-manually)).
+
 
 Deploy on production
 --------------------
