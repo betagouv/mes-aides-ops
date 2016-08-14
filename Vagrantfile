@@ -19,6 +19,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision 'ansible' do |ansible|
     ansible.playbook = './site.yml'
     ansible.inventory_path = './inventories/local'
+    ansible.limit = 'mes_aides'
     ansible.sudo = true
     ansible.verbose ='v'
   end
