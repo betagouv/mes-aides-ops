@@ -1,0 +1,31 @@
+- name: Create folder ssl
+  file: path={{ nginx_path }}/ssl state=directory
+
+- name: Copy chain cert {{ssl_certificate_host}}.chained.crt
+  copy: src="certificates/{{ssl_certificate_host}}.chained.crt" dest={{ nginx_path }}/ssl/{{ssl_certificate_host}}.chained.crt
+  when: ssl_certificate_host is defined
+  notify: restart nginx
+  tags: reverseProxy
+
+- name: Copy encrypted certificates {{ssl_certificate_host}}.key.encrypted"
+  copy: src="certificates/{{ ssl_certificate_host }}.key.encrypted" dest={{ nginx_path}}/ssl/{{ ssl_certificate_host }}.key.encrypted
+  notify: restart nginx
+  when: ssl_certificate_host is defined
+  register: encrypted_certif
+  tags: reverseProxy
+
+- name: Decrypt certificate {{ ssl_certificate_host }}.key.encrypted
+  shell: openssl aes-256-cbc -salt -a -d -in {{ nginx_path }}/ssl/{{ ssl_certificate_host }}.key.encrypted -out {{ nginx_path }}/ssl/{{ ssl_certificate_host }}.key -k {{ certif_password }}
+  when: encrypted_certif.changed
+  notify: restart nginx
+  tags: reverseProxy
+
+- name: Check dhparams.pem file existance
+  stat:
+    path: "{{ dhparam_path }}"
+  register: dhparams_stats
+
+- name: Create dhparams file if needed
+  command: openssl dhparam -out {{ dhparam_path }} 2048
+  notify: restart nginx
+  when: dhparams_stats.stat.exists == False

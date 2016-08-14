@@ -1,0 +1,22 @@
+- name: set vhosts
+  template:
+    src: vhost.conf.j2
+    dest: "/etc/nginx/sites-available/{{ mes_aides.name }}.conf"
+  notify: restart nginx
+  tags: vhost
+
+- name: enable vhost
+  file:
+    src: /etc/nginx/sites-available/{{ mes_aides.name }}.conf
+    dest: /etc/nginx/sites-enabled/{{ mes_aides.name }}.conf
+    state: link
+  notify: restart nginx
+  tags: vhost
+
+- name: disable vhost
+  file:
+    path: "{{ item }}"
+    state: absent
+  notify: restart nginx
+  with_items: "{{ disabled_vhosts }}"
+  tags: vhost

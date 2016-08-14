@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role : ssl, ssl_certificate_host: '{{ mes_aides.domain }}' }
+  - { role : nginx }

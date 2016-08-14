@@ -1,7 +1,15 @@
 ---
-  - name: get Mes aides code
+  - name: Update Mes Aides codebase
     git:
       repo: https://github.com/sgmap/mes-aides-ui.git
       dest: "{{ mes_aides.path }}"
       version: "{{ mes_aides.version }}"
     tags: mes_aides
+
+  - name: Start Mes Aides
+    shell: npm start >> mes_aides.install.log
+    args:
+      chdir: "{{ mes_aides.path }}"
+    tags: mes_aides
+
+  - include: nginx.yml

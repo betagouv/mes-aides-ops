@@ -1,0 +1,1 @@
+dhparam_path: "{{ nginx_path }}/ssl/dhparams.pem"
