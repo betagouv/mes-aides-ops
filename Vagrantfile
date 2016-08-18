@@ -1,49 +1,21 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+Vagrant.require_version ">= 1.7.0"  # for Ansible provisioner
 
-vms = {
-  :mesAide =>
-    { :ip => '192.168.56.134',
-      :name => 'mesAide'
-    }
-}
+ENV['LC_ALL'] = 'en_US.UTF-8'  # Vagrant passes host locale to guest, but guest machine does not have locale installed. Avoid complaints about it.
 
-ssh_pubkey = File.read(File.join(Dir.home, '.ssh', 'id_rsa.pub')).chomp
+Vagrant.configure(2) do |config|
+  config.vm.box = 'ubuntu/trusty64'
+  config.vm.network 'private_network', ip: '192.168.56.134'
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
+  config.vm.define 'mes_aides'
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/xenial64"
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-
-  config.vm.provision 'shell', inline: <<-SHELL
-    sudo mkdir -p /home/ubuntu/.ssh -m 700
-    sudo echo '#{ssh_pubkey}' >> /home/ubuntu/.ssh/authorized_keys
-  SHELL
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-
-
-  config.vm.provider "virtualbox" do |v|
-    v.cpus = 1
-    v.gui = false
+  config.vm.provider 'virtualbox' do |vbox|
+    vbox.linked_clone = true if Vagrant::VERSION =~ /^1.8/  # do not duplicate the base image
   end
 
-  vms.each_pair do |key, vm|
-    config.vm.define key do |configvm|
-      configvm.vm.network 'private_network', ip: vm[:ip]
-      configvm.vm.provider 'virtualbox' do |vb|
-        vb.memory = vm[:memory] || '512'
-        vb.name = vm[:name]
-      end
-    end
+  config.vm.provision 'ansible' do |ansible|
+    ansible.playbook = 'site.yml'
+    ansible.sudo = true
+    ansible.verbose ='v'
+    ansible.host_vars = { mes_aides: { ansible_user: 'ubuntu' } }  # to be removed once https://github.com/mitchellh/vagrant/issues/7552 is fixed
   end
 end

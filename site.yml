@@ -1,6 +1,6 @@
 ---
 
-- hosts: mes-aides
+- hosts: mes_aides
   become: true
   roles:
     - nvm
