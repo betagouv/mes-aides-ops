@@ -23,14 +23,14 @@
     tags: mes_aides
 
   - name: Install bower
-    shell: . ~/.profile && npm install -g bower
-    args:
-      chdir: "{{ mes_aides.path }}"
-      executable: /bin/bash
+    npm:
+      name: bower
+      global: yes
     tags: mes_aides
+    become: true
 
   - name: Install dependencies
-    shell: . ~/.profile && npm install
+    shell: npm install --production
     args:
       chdir: "{{ mes_aides.path }}"
       executable: /bin/bash

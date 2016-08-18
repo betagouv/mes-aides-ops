@@ -1,4 +1,0 @@
-node_version: v0.10.46
-node_url: http://nodejs.org/dist/{{ node_version }}/node-{{ node_version }}.tar.gz
-node_path: /opt/node/node-{{ node_version }}
-node_tarball_path: "{{ node_path }}.tar.gz"
