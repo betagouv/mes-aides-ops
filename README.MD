@@ -21,5 +21,5 @@ Test locally
 Deploy on production
 --------------------
 
- * Install python `ansible --sudo -i inventories/local -m raw -a "apt-get update && apt-get -y upgrade && apt-get install -y python" mes-aides`
- * Run ansible `ansible-playbook -i prod site.yml`
+ * Install python `ansible --sudo -i inventories/prod -m raw -a "apt-get update && apt-get -y upgrade && apt-get install -y python" mes-aides`
+ * Run ansible `ansible-playbook -i inventories/prod site.yml`
