@@ -1,0 +1,48 @@
+- name: Install dependencies
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - git
+    - curl
+    - build-essential
+    - libssl-dev
+  tags: node
+
+- name: init folder with correct access permissions
+  file:
+    path: "{{ node_path }}"
+    state: directory
+  tags: node
+
+
+- name: get node tar ball
+  get_url:
+    url: "{{ node_url }}"
+    dest: /opt/node
+    mode: 0744
+  tags: node
+
+- name: untar the node archive
+  unarchive:
+    src: "{{ node_tarball_path }}"
+    dest: "{{ node_path }}"
+  tags: node
+
+
+- name: configure node
+  shell: ./configure
+  args:
+    chdir: "{{ node_path }}"
+  tags: node
+
+
+- name: make node
+  shell: make -j2
+  args:
+    chdir: "{{ node_path }}"
+  tags: node
+
+- name: make node
+  shell: make install
+  args:
+    chdir: "{{ node_path }}"
+  tags: node

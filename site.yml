@@ -3,7 +3,10 @@
 - hosts: mes-aides
   become: true
   roles:
-    - mongodb
     - nvm
+    - mongodb
     - nginx
+
+- hosts: mes-aides
+  roles: []
     - mes_aides
