@@ -1,4 +1,19 @@
 ---
+  - name: install dependencies
+    apt:
+      name: libkrb5-dev
+      state: present
+    become: true
+    tags: mes_aides
+
+  - name: init folder with correct access permissions
+    file:
+      path: "{{ mes_aides.path }}"
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      state: directory
+    become: true
+
   - name: Update Mes Aides codebase
     git:
       repo: https://github.com/sgmap/mes-aides-ui.git
@@ -7,10 +22,19 @@
       depth: 1
     tags: mes_aides
 
-  - name: Start Mes Aides
-    shell: npm start >> mes_aides.install.log
+  - name: Install bower
+    shell: . ~/.profile && npm install -g bower
     args:
       chdir: "{{ mes_aides.path }}"
+      executable: /bin/bash
     tags: mes_aides
+
+  - name: Install dependencies
+    shell: . ~/.profile && npm install
+    args:
+      chdir: "{{ mes_aides.path }}"
+      executable: /bin/bash
+    tags: mes_aides
+
 
   - include: nginx.yml
