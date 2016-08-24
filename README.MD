@@ -7,6 +7,7 @@ In all cases
 ------------
 
 1. Install [Ansible](http://www.ansible.com).
+2. Get dependencies: `ansible-galaxy install -r requirements.yml`.
 
 
 Test locally
