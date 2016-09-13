@@ -3,10 +3,6 @@
 - hosts: mes_aides
   become: true
   roles:
-    - nodesource.node
+    - mes_aides
     - mongodb
     - nginx
-
-- hosts: mes-aides
-  roles:
-    - mes_aides
