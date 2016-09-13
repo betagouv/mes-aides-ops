@@ -12,6 +12,9 @@ Vagrant.configure(2) do |config|
     vbox.linked_clone = true if Vagrant::VERSION =~ /^1.8/  # do not duplicate the base image
   end
 
+  config.vm.provision 'shell',
+    inline: 'add-apt-repository ppa:fkrull/deadsnakes-python2.7 && apt-get update && apt-get -y upgrade && apt-get install -y python'  # upgrade to Python 2.7.9, required for nodesource install until https://github.com/nodesource/ansible-nodejs-role/issues/33 is fixed
+
   config.vm.provision 'ansible' do |ansible|
     ansible.playbook = 'site.yml'
     ansible.sudo = true
