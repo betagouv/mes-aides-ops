@@ -10,6 +10,7 @@
     apt:
       name: git
       state: present
+      autoclean: true
     tags: mes_aides
 
   - name: Update Mes Aides codebase
