@@ -20,6 +20,22 @@
       depth: 1
     tags: mes_aides
 
+  - name: Install Node and NPM 1
+    apt:
+      name:
+        - nodejs-legacy=0.10*
+        - npm
+      state: present
+      autoclean: true
+    tags: mes_aides
+
+  - name: Update NPM to v2
+    npm:
+      name: npm
+      version: 2
+      global: true
+    tags: mes_aides
+
   - name: Install dependencies
     npm:
       path: "{{ mes_aides.path }}"
