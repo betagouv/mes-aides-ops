@@ -22,18 +22,9 @@
       depth: 1
     tags: mes_aides
 
-  - name: Install bower
-    npm:
-      name: bower
-      global: yes
-    tags: mes_aides
-    become: true
-
   - name: Install dependencies
-    shell: npm install --production
-    args:
-      chdir: "{{ mes_aides.path }}"
-      executable: /bin/bash
+    npm:
+      path: "{{ mes_aides.path }}"
     tags: mes_aides
 
 
