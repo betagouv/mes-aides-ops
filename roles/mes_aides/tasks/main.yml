@@ -19,6 +19,7 @@
       dest: "{{ mes_aides.path }}"
       version: "{{ mes_aides.version }}"
       depth: 1
+      force: yes
     tags: mes_aides
 
   - name: Install Node and NPM 1
