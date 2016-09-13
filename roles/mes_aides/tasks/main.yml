@@ -6,13 +6,11 @@
     become: true
     tags: mes_aides
 
-  - name: init folder with correct access permissions
-    file:
-      path: "{{ mes_aides.path }}"
-      owner: "{{ ansible_user }}"
-      group: "{{ ansible_user }}"
-      state: directory
-    become: true
+  - name: Install Git
+    apt:
+      name: git
+      state: present
+    tags: mes_aides
 
   - name: Update Mes Aides codebase
     git:
