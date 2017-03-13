@@ -36,4 +36,5 @@ A `monitor` user is set up in production. It has a login shell that is the `moni
 
 This user also runs `monitor-server.js` through `nohup` on the `8888` port, thus exposing the monitor over HTTP. The global NGINX service is set up to expose this port on `monitor.mes-aides.gouv.fr`.
 
-This endpoint is scanned by [UptimeRobot](https://uptimerobot.com) on a 5-minutes interval, and will notify the team through Slack and SMS. It is also scanned by [SetCronJob](https://www.setcronjob.com) which will notify the team by email. The SetCronJob instance has to be manually rearmed when it has been triggered.
+Two different scanning services are used, in order to remove dependency on one specific provider to notify in case of a service failure.
+This endpoint is scanned by [UptimeRobot](https://uptimerobot.com) on a 5-minutes interval, and will notify the team through Slack and SMS. It is also scanned on a 2-minutes interval by [SetCronJob](https://www.setcronjob.com) which will notify the team by email. The SetCronJob instance has to be manually rearmed when it has been triggered.
