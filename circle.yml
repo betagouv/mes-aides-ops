@@ -1,12 +1,46 @@
+machine:
+  environment:
+    browser_name: $(case $CIRCLE_NODE_INDEX in 0) browser='chrome' ;; 1) browser='firefox' ;; 2) browser='internet explorer' ;; 3) browser='iphone' ;; esac; echo $browser)
+    browser_version: $(case $CIRCLE_NODE_INDEX in 3) version='8.2' ;; esac; echo $version)
+    SAUCE_LOG: $CIRCLE_ARTIFACTS/sauce_log.txt
+    WATAI_TESTS: test/integration
+    SAUCE_USERNAME: mes-aides-bot
+
 dependencies:
   override:
     - sudo ./bootstrap.sh
+  post:
+    # allow sending Watai results to SauceLabs by installing saucelabs in mes-aides-ui
+    - cd $HOME/mes-aides-ui && npm install saucelabs@0.1.1
+    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
+    - tar -xzf sc-latest-linux.tar.gz
 
 test:
+  pre:
+    # start Sauce Connect
+    - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --tunnel-identifier "circle-$CIRCLE_BUILD_NUM-$CIRCLE_NODE_INDEX" --readyfile ~/sauce_is_ready > $SAUCE_LOG:
+        background: true
+        parallel: true
+    # wait for Sauce Connect
+    - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done:
+        parallel: true
+    # wait for server (after Sauce Connect because it is faster to start)
+    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:8000:
+        parallel: true
+    # wait for OpenFisca
+    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:2000:
+        parallel: true
+    # remove configuration files to prevent unwanted overrides
+    - cd $HOME/mes-aides-ui && git checkout circleci && rm $HOME/mes-aides-ui/$WATAI_TESTS/config*:
+        parallel: true
+    # prepare CI-specific config holder and add CI-specific config to Watai
+    - mkdir $HOME/.watai && cp $HOME/mes-aides-ops/watai-config-ci.js $HOME/.watai/config.js:
+        parallel: true
+
   override:
-    # OpenFisca (via gunicorn)
-    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:2000
-    # Mes-Aides (via ExpressJS)
-    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:8000
-    # Mes-Aides (via nginx proxy)
-    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost
+    # provide path to allow watai reference in run-integration-tets.sh
+    - PATH=/home/ubuntu/mes-aides-ui/node_modules/.bin:$PATH $HOME/mes-aides-ui/$WATAI_TESTS/run-integration-tests.sh '{"driverCapabilities":{"browserName":"'"$browser_name"'","version":"'"$browser_version"'"}}'
+
+  post:
+    - killall --wait sc:  # wait until Sauce Connect closes the tunnel
+        parallel: true
