@@ -1,3 +1,12 @@
 dependencies:
   override:
     - sudo ./bootstrap.sh
+
+test:
+  override:
+    # OpenFisca (via gunicorn)
+    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:2000
+    # Mes-Aides (via ExpressJS)
+    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost:8000
+    # Mes-Aides (via nginx proxy)
+    - wget --retry-connrefused --waitretry=1 --output-document=/dev/null http://localhost
