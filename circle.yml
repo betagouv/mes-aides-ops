@@ -12,8 +12,8 @@ dependencies:
   post:
     # allow sending Watai results to SauceLabs by installing saucelabs in mes-aides-ui
     - cd $HOME/mes-aides-ui && npm install saucelabs@0.1.1
-    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
-    - tar -xzf sc-latest-linux.tar.gz
+    - wget https://saucelabs.com/downloads/sc-4.4.5-linux.tar.gz
+    - tar -xzf sc-4.4.5-linux.tar.gz
 
 test:
   pre:
