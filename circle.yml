@@ -38,8 +38,7 @@ test:
         parallel: true
 
   override:
-    # provide path to allow watai reference in run-integration-tets.sh
-    - PATH=/home/ubuntu/mes-aides-ui/node_modules/.bin:$PATH $HOME/mes-aides-ui/$WATAI_TESTS/run-integration-tests.sh '{"driverCapabilities":{"browserName":"'"$browser_name"'","version":"'"$browser_version"'"}}'
+    - $HOME/mes-aides-ui/node_modules/.bin/watai $HOME/mes-aides-ui/$WATAI_TESTS/base-suite --config '{"driverCapabilities":{"browserName":"'"$browser_name"'","version":"'"$browser_version"'"}}'
 
   post:
     - killall --wait sc:  # wait until Sauce Connect closes the tunnel
