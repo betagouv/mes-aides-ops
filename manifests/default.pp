@@ -73,17 +73,17 @@ exec { 'prestart mes-aides-ui':
     user        => 'main',
 }
 
-file { '/etc/init/ma-web.conf':
+file { '/etc/systemd/system/ma-web.service':
     ensure => file,
     owner  => 'root',
     group  => 'root',
     mode   => '644',
-    source => 'puppet:///modules/mesaides/ma-web.conf',
+    source => 'puppet:///modules/mesaides/ma-web.service',
 }
 
 service { 'ma-web':
     ensure  => 'running',
-    require => [ File['/etc/init/ma-web.conf'], User['main'] ],
+    require => [ File['/etc/systemd/system/ma-web.service'], User['main'] ],
 }
 
 ::mesaides::nginx_config { 'mes-aides.gouv.fr':
