@@ -11,3 +11,6 @@ Environment=MES_AIDES_ROOT_URL='https://mes-aides.gouv.fr'
 WorkingDirectory=/home/main/mes-aides-ui
 EnvironmentFile=-/home/main/.mes-aides-secrets
 ExecStart=/usr/bin/node server
+
+[Install]
+WantedBy=multi-user.target
