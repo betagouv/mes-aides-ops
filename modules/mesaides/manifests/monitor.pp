@@ -25,7 +25,7 @@ define mesaides::monitor () {
 
     service { 'ma-monitor':
         ensure  => 'running',
-        require => File['/etc/systemd/system/ma-monitor.conf'],
+        require => File['/etc/systemd/system/ma-monitor.service'],
     }
 
     ::mesaides::nginx_config { $name:
