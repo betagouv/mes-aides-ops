@@ -135,17 +135,17 @@ exec { 'fetch openfisca requirements':
     user        => 'main',
 }
 
-file { '/etc/init/openfisca.conf':
+file { '/etc/systemd/system/openfisca.service':
     ensure => file,
     owner  => 'root',
     group  => 'root',
     mode   => '644',
-    source => 'puppet:///modules/mesaides/openfisca.conf',
+    source => 'puppet:///modules/mesaides/openfisca.service',
 }
 
 service { 'openfisca':
     ensure  => 'running',
-    require => [ File['/etc/init/openfisca.conf'], User['main'] ],
+    require => [ File['/etc/systemd/system/openfisca.service'], User['main'] ],
 }
 
 if find_file("/opt/mes-aides/${instance_name}_use_ssl") or find_file('/opt/mes-aides/use_ssl') {
