@@ -15,17 +15,17 @@ define mesaides::monitor () {
         source => 'puppet:///modules/mesaides/monitor-server.js',
     }
 
-    file { '/etc/init/ma-monitor.conf':
+    file { '/etc/systemd/system/ma-monitor.service':
         ensure => file,
         owner  => 'root',
         group  => 'root',
         mode   => '644',
-        source => 'puppet:///modules/mesaides/ma-monitor.conf',
+        source => 'puppet:///modules/mesaides/ma-monitor.service',
     }
 
     service { 'ma-monitor':
         ensure  => 'running',
-        require => File['/etc/init/ma-monitor.conf'],
+        require => File['/etc/systemd/system/ma-monitor.service'],
     }
 
     ::mesaides::nginx_config { $name:

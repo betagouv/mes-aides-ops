@@ -238,6 +238,19 @@ file { '/etc/nginx/conf.d/upstreams.conf':
     source => 'puppet:///modules/mesaides/upstreams.conf',
 }
 
+file { '/etc/systemd/system/ma-web.service':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '644',
+    source => 'puppet:///modules/mesaides/ma-web.service',
+}
+
+service { 'ma-web':
+    ensure  => 'running',
+    require => [ File['/etc/systemd/system/ma-web.service'], User['main'] ],
+}
+
 ::mesaides::nginx_config { 'mes-aides.gouv.fr':
     add_www_subdomain => true,
     is_default        => true,
@@ -300,21 +313,18 @@ exec { 'fetch openfisca requirements':
     require     => [ Exec['update virtualenv pip'], Vcsrepo['/home/main/mes-aides-ui'] ],
     user        => 'main',
 }
-/*
-file { '/etc/init/openfisca.conf':
-    ensure  => file,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '644',
-    content => template('mesaides/openfisca.conf.erb'),
+
+file { '/etc/systemd/system/openfisca.service':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '644',
+    source => template('mesaides/openfisca.service'),
 }
 
 service { 'openfisca':
-    ensure     => 'running',
-    hasrestart => true,
-    provider   => 'upstart',
-    require    => [ File['/etc/init/openfisca.conf'], User['main'] ],
-    restart    => 'service openfisca reload'
+    ensure  => 'running',
+    require => [ File['/etc/systemd/system/openfisca.service'], User['main'] ],
 }
 
 if find_file("/opt/mes-aides/${instance_name}_use_ssl") or find_file('/opt/mes-aides/use_ssl') {

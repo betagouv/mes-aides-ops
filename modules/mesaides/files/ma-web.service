@@ -1,0 +1,16 @@
+[Unit]
+Description=Service in charge of mes-aides.gouv.fr main webserver
+
+[Service]
+User=main
+Group=main
+Environment=PORT=8000
+Environment=NODE_ENV='production'
+Environment=MONGODB_URL='mongodb://localhost/dds'
+Environment=MES_AIDES_ROOT_URL='https://mes-aides.gouv.fr'
+WorkingDirectory=/home/main/mes-aides-ui
+EnvironmentFile=-/home/main/.mes-aides-secrets
+ExecStart=/usr/bin/node server
+
+[Install]
+WantedBy=multi-user.target
