@@ -274,7 +274,7 @@ apt::ppa { 'ppa:deadsnakes/ppa':
 }
 
 class { 'python':
-    version    => 'python3.6',
+    version    => 'python3.7',
     dev        => 'present', # default: 'absent'
     # Can't use python gunicorn here as it would be imported from apt instead of pip
     virtualenv => 'present', # default: 'absent'
@@ -284,20 +284,20 @@ class { 'python':
 
 # Allows running `python3 -m venv /path/to/venv`
 # https://docs.python.org/3/library/venv.html#creating-virtual-environments
-package { 'python3.6-venv':
+package { 'python3.7-venv':
     require => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'] ],
 }
 
-$venv_dir = '/home/main/venv_python3.6'
+$venv_dir = '/home/main/venv_python3.7'
 
 exec { 'create virtualenv':
-    command => "python3.6 -m venv ${venv_dir}",
+    command => "python3.7 -m venv ${venv_dir}",
     path    => [ '/usr/local/bin', '/usr/bin', '/bin' ],
     cwd     => '/home/main/mes-aides-ui',
     user    => 'main',
     group   => 'main',
     creates => "${venv_dir}/bin/activate",
-    require => [ Class['python'], Package['python3.6-venv'] ],
+    require => [ Class['python'], Package['python3.7-venv'] ],
 }
 
 exec { 'update virtualenv pip':
