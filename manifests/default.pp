@@ -273,13 +273,17 @@ apt::ppa { 'ppa:deadsnakes/ppa':
     notify => Exec['apt_update']
 }
 
+package { 'openssl':
+    ensure => 'latest'
+}
+
 class { 'python':
     version    => 'python3.7',
     dev        => 'present', # default: 'absent'
     # Can't use python gunicorn here as it would be imported from apt instead of pip
     virtualenv => 'present', # default: 'absent'
     # https://forge.puppet.com/puppetlabs/apt#adding-new-sources-or-ppas
-    require    => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'] ],
+    require    => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'], Package['openssl'] ],
 }
 
 # Allows running `python3 -m venv /path/to/venv`
