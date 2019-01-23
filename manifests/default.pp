@@ -286,6 +286,7 @@ class { 'python':
     dev        => 'present', # default: 'absent'
     # Can't use python gunicorn here as it would be imported from apt instead of pip
     virtualenv => 'present', # default: 'absent'
+    pip        => 'latest', # default: 'absent'
     # https://forge.puppet.com/puppetlabs/apt#adding-new-sources-or-ppas
     require    => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'], Package['openssl'], Package['libssl-dev'] ],
 }
