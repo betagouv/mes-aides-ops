@@ -287,7 +287,7 @@ class { 'python':
     # Can't use python gunicorn here as it would be imported from apt instead of pip
     virtualenv => 'present', # default: 'absent'
     # https://forge.puppet.com/puppetlabs/apt#adding-new-sources-or-ppas
-    require    => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'], Package['openssl'], , Package['libssl-dev'] ],
+    require    => [ Apt::Ppa['ppa:deadsnakes/ppa'], Class['apt::update'], Package['openssl'], Package['libssl-dev'] ],
 }
 
 # Allows running `python3 -m venv /path/to/venv`
