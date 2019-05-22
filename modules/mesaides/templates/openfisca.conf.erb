@@ -4,6 +4,9 @@ respawn
 
 env LC_ALL=C.UTF-8
 env LANG=C.UTF-8
+<% if ENV['OPENFISCA_WORKERS'] %>
+env OPENFISCA_WORKERS=<%= ENV['OPENFISCA_WORKERS'] %>
+<% end %>
 
 setuid main
 setgid main
