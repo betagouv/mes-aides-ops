@@ -22,6 +22,9 @@ jobs:
           command: sleep 2m
           no_output_timeout: 3m
       - run:
+          name: Snapshot OpenFisca Upstart configuration
+          command: cp /etc/init/openfisca.conf /tmp/artifacts/openfisca.conf
+      - run:
           name: Test node webserver
           command: wget --retry-connrefused --tries=10 -O /tmp/artifacts/node.out 0.0.0.0:8000 2>/tmp/artifacts/wget.log
       - run:
