@@ -218,7 +218,7 @@ exec { 'startOrReload ma-web':
     command     => '/usr/bin/pm2 startOrReload /home/main/mes-aides-ui/pm2_config.yaml --update-env',
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main', 'CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox'],
-    require     => [ Exec['prestart mes-aides-ui'], Package['pm2'] ],
+    require     => [ Exec['prestart mes-aides-ui'], Exec['install pm2 startup script'] ],
     user        => 'main',
 }
 
