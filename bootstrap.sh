@@ -4,7 +4,7 @@ cd $(dirname "$BASH_SOURCE")
 
 set -ev
 
-LATEST_PUPPET_PACKAGE=puppetlabs-release-pc1-trusty.deb
+LATEST_PUPPET_PACKAGE=puppet-release-stretch.deb
 
 PROVISIONING_FOLDER=/opt/mes-aides
 BOOTSTRAP_FOLDER=$PROVISIONING_FOLDER/bootstrap
@@ -13,7 +13,7 @@ OPS_FOLDER=$PROVISIONING_FOLDER/ops
 MANIFESTS_SOURCE_FOLDER=manifests
 MANIFESTS_SOURCE_REPOSITORY=betagouv/mes-aides-ops
 
-
+apt-get --assume-yes install curl
 curl --location --remote-name https://apt.puppetlabs.com/$LATEST_PUPPET_PACKAGE
 dpkg --install $LATEST_PUPPET_PACKAGE
 apt-get update
