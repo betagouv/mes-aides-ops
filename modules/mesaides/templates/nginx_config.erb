@@ -110,6 +110,12 @@ server {
 
   include snippets/mes-aides-static.conf;
 
+  # TEMPORARY FIX
+  location ~ ^/annuaire-api/(.*)$ {
+    rewrite ^/annuaire-api/(.*) /$1 break;
+    proxy_pass http://localhost:12346;
+  }
+
   # WARNING
   # Everything in app/ or dist/ will be served directly by Nginx
   # Do not put any sensitive file there
