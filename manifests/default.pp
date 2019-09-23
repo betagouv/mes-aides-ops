@@ -297,6 +297,12 @@ file { '/etc/nginx/conf.d/upstreams.conf':
     upstream_name    => 'openfisca',
 }
 
+nginx::resource::server { 'etablissements-publics.api.gouv.fr':
+  listen_port => 80,
+  proxy       => 'http://localhost:12346',
+  require     => [ Exec['startOrReload annuaire-api'] ],
+}
+
 apt::ppa { 'ppa:deadsnakes/ppa':
     notify => Exec['apt_update']
 }
