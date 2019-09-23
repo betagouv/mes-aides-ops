@@ -204,6 +204,17 @@ exec { 'install node modules for mes-aides-ui':
     notify      => [ Exec['setup setuid sandbox'] ],
 }
 
+exec { 'install node modules for annuaire-api':
+    command     => '/usr/bin/npm ci',
+    cwd         => '/home/main/annuaire-api',
+    environment => ['HOME=/home/main'],
+    require     => [ Class['nodejs'], User['main'] ],
+    # https://docs.puppet.com/puppet/latest/types/exec.html#exec-attribute-timeout
+    #  default is 300 (seconds)
+    timeout     => 1800, # 30 minutes
+    user        => 'main',
+}
+
 # https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#alternative-setup-setuid-sandbox
 exec { 'setup setuid sandbox':
     command => 'chown root:root node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox && chmod 4755 node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox && cp -p node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox /usr/local/sbin/chrome-devel-sandbox',
@@ -228,6 +239,14 @@ exec { 'startOrReload ma-web':
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main', 'CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox'],
     require     => [ Exec['prestart mes-aides-ui'], Package['pm2'] ],
+    user        => 'main',
+}
+
+exec { 'startOrReload annuaire-api':
+    command     => '/usr/bin/pm2 startOrReload /home/main/annuaire-api/app.config.js --update-env',
+    cwd         => '/home/main/annuaire-api',
+    environment => ['HOME=/home/main'],
+    require     => [ Exec['install node modules for annuaire-api'], Package['pm2'] ],
     user        => 'main',
 }
 
