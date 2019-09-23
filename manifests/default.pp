@@ -159,6 +159,15 @@ vcsrepo { '/home/main/mes-aides-ui':
     notify   => [ File['/home/main/mes-aides-ui/backend/config/production.js'] ],
 }
 
+vcsrepo { '/home/main/annuaire-api':
+    ensure   => latest,
+    provider => git,
+    require  => [ User['main'] ],
+    revision => 'origin/master',
+    source   => 'https://github.com/betagouv/annuaire-api.git',
+    user     => 'main',
+}
+
 file { '/home/main/mes-aides-ui/backend/config/production.js':
     ensure  => present, # creates a normal file if the file is missing
     replace => false,   # setting this to false allows file resources to initialize files without overwriting future changes
