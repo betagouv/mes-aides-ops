@@ -297,10 +297,21 @@ file { '/etc/nginx/conf.d/upstreams.conf':
     upstream_name    => 'openfisca',
 }
 
+letsencrypt::certonly { 'etablissements-publics.api.gouv.fr':
+    domains              => [ 'etablissements-publics.api.gouv.fr' ],
+    webroot_paths        => [ '/home/main/annuaire-api' ],
+    plugin               => 'webroot',
+    manage_cron          => true,
+    cron_success_command => 'service nginx reload',
+}
+
 nginx::resource::server { 'etablissements-publics.api.gouv.fr':
-  listen_port => 80,
-  proxy       => 'http://localhost:12346',
-  require     => [ Exec['startOrReload annuaire-api'] ],
+    listen_port => 80,
+    proxy       => 'http://localhost:12346',
+    ssl         => find_file('/opt/mes-aides/use_ssl'),
+    ssl_cert    => '/etc/letsencrypt/live/etablissements-publics.api.gouv.fr/fullchain.pem',
+    ssl_key     => '/etc/letsencrypt/live/etablissements-publics.api.gouv.fr/privkey.pem',
+    require     => [ Exec['startOrReload annuaire-api'] ],
 }
 
 apt::ppa { 'ppa:deadsnakes/ppa':
