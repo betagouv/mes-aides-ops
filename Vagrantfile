@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
 
   # Allow development on various version relatively simply
   current_directory = Dir.pwd.split("/").last
-  delimiter = current_directory.index("_")
+  delimiter = current_directory.rindex("_")
   current_index = 100 + (delimiter ? current_directory[0..(delimiter - 1)].to_i : 0)
   current_private_ip = "192.168.56.#{current_index}"
 
