@@ -294,7 +294,7 @@ exec { 'fetch openfisca requirements':
     command     => "${venv_dir}/bin/pip3 install --upgrade -r openfisca/requirements.txt",
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main'],
-    notify      => [ Exec['startOrReload ma-web']], Service['openfisca'] ],
+    notify      => [ Exec['startOrReload ma-web'], Service['openfisca'] ],
     require     => [ Exec['update virtualenv pip'], Vcsrepo['/home/main/mes-aides-ui'] ],
     user        => 'main',
 }
