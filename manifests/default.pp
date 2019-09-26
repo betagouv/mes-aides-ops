@@ -238,19 +238,6 @@ file { '/etc/nginx/conf.d/upstreams.conf':
     source => 'puppet:///modules/mesaides/upstreams.conf',
 }
 
-file { '/etc/systemd/system/ma-web.service':
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '644',
-    source => 'puppet:///modules/mesaides/ma-web.service',
-}
-
-service { 'ma-web':
-    ensure  => 'running',
-    require => [ File['/etc/systemd/system/ma-web.service'], User['main'] ],
-}
-
 ::mesaides::nginx_config { 'mes-aides.gouv.fr':
     add_www_subdomain => true,
     is_default        => true,
@@ -315,11 +302,11 @@ exec { 'fetch openfisca requirements':
 }
 
 file { '/etc/systemd/system/openfisca.service':
+    content => template('mesaides/openfisca.service.erb'),
     ensure => file,
     owner  => 'root',
     group  => 'root',
     mode   => '644',
-    source => template('mesaides/openfisca.service'),
 }
 
 service { 'openfisca':
@@ -334,8 +321,3 @@ if find_file("/opt/mes-aides/${instance_name}_use_ssl") or find_file('/opt/mes-a
         }
     }
 }
-
-*/
-
-
-
