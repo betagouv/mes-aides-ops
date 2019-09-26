@@ -97,7 +97,13 @@ file_line { '/etc/nginx/mime.types TTF':
     require => [ Class['nginx'] ],
 }
 */
-include '::mongodb::server'
+
+class { 'mongodb::globals':
+  manage_package_repo => true,
+  repo_location => 'http://repo.mongodb.org/apt/debian'
+}
+
+class { 'mongodb::server': }
 
 class { 'nodejs':
     repo_url_suffix => '8.x',
