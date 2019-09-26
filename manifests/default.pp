@@ -191,7 +191,6 @@ package { 'chromium':
     ensure => 'present',
 }
 
-/*
 exec { 'install node modules for mes-aides-ui':
     command     => '/usr/bin/npm ci',
     cwd         => '/home/main/mes-aides-ui',
@@ -202,13 +201,12 @@ exec { 'install node modules for mes-aides-ui':
     timeout     => 1800, # 30 minutes
     user        => 'main',
 }
-*/
 
 exec { 'prestart mes-aides-ui':
     command     => '/usr/bin/npm run prestart',
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main'],
-    notify      => [ Exec['startOrReload ma-web']],#, Service['openfisca'] ],
+    notify      => [ Exec['startOrReload ma-web'], Service['openfisca'] ],
     require     => [ Class['nodejs'], Vcsrepo['/home/main/mes-aides-ui']],# Exec['install node modules for mes-aides-ui'] ],
     user        => 'main',
 }
@@ -296,7 +294,7 @@ exec { 'fetch openfisca requirements':
     command     => "${venv_dir}/bin/pip3 install --upgrade -r openfisca/requirements.txt",
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main'],
-    notify      => [ Exec['startOrReload ma-web']],#, Service['openfisca'] ],
+    notify      => [ Exec['startOrReload ma-web']], Service['openfisca'] ],
     require     => [ Exec['update virtualenv pip'], Vcsrepo['/home/main/mes-aides-ui'] ],
     user        => 'main',
 }
