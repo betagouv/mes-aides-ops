@@ -48,7 +48,7 @@ file_line { '/etc/ssh/sshd_config PasswordAuthentication':
 file_line { '/etc/ssh/sshd_config UsePAM':
     ensure => present,
     path   => '/etc/ssh/sshd_config',
-    line   => 'UsePAM no',
+    line   => 'UsePAM yes',
     match  => '^[ ^]*UsePAM',
     notify => [ Service['ssh'] ],
 }
@@ -80,7 +80,6 @@ file { "/etc/nginx/snippets/mes-aides-static.conf":
     mode    => '644',
 }
 
-# BOGUS
 /*
 file_line { '/etc/nginx/mime.types WOFF':
     ensure  => present,
@@ -98,7 +97,6 @@ file_line { '/etc/nginx/mime.types TTF':
     require => [ Class['nginx'] ],
 }
 */
-
 include '::mongodb::server'
 
 class { 'nodejs':
@@ -189,28 +187,29 @@ package { 'libkrb5-dev': }
 package { 'libfontconfig': }
 
 # Install Chromium to have Puppeteer dependencies installed as well
-package { 'chromium-browser':
+package { 'chromium':
     ensure => 'present',
 }
 
+/*
 exec { 'install node modules for mes-aides-ui':
     command     => '/usr/bin/npm ci',
     cwd         => '/home/main/mes-aides-ui',
-    environment => ['HOME=/home/main'],
-    require     => [ Class['nodejs'], User['main'], Package['chromium-browser'] ],
+    environment => ['HOME=/home/main', 'PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1'],
+    require     => [ Class['nodejs'], User['main'], Package['chromium'] ],
     # https://docs.puppet.com/puppet/latest/types/exec.html#exec-attribute-timeout
     #  default is 300 (seconds)
     timeout     => 1800, # 30 minutes
     user        => 'main',
-    notify      => [ Exec['setup setuid sandbox'] ],
 }
+*/
 
 exec { 'prestart mes-aides-ui':
     command     => '/usr/bin/npm run prestart',
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main'],
-    notify      => [ Exec['startOrReload ma-web'], Service['openfisca'] ],
-    require     => [ Class['nodejs'], Vcsrepo['/home/main/mes-aides-ui'], Exec['install node modules for mes-aides-ui'] ],
+    notify      => [ Exec['startOrReload ma-web']],#, Service['openfisca'] ],
+    require     => [ Class['nodejs'], Vcsrepo['/home/main/mes-aides-ui']],# Exec['install node modules for mes-aides-ui'] ],
     user        => 'main',
 }
 
@@ -270,6 +269,7 @@ file { '/etc/nginx/conf.d/upstreams.conf':
 }
 
 package { 'python3.7': }
+package { 'python3.7-dev': }
 package { 'python3.7-venv': }
 
 $venv_dir = '/home/main/venv_python3.7'
@@ -281,7 +281,7 @@ exec { 'create virtualenv':
     user    => 'main',
     group   => 'main',
     creates => "${venv_dir}/bin/activate",
-    require => [ Package['python3.7'], Package['python3.7-venv'] ],
+    require => [ Package['python3.7'],  Package['python3.7-dev'], Package['python3.7-venv'] ],
 }
 
 exec { 'update virtualenv pip':
@@ -296,11 +296,11 @@ exec { 'fetch openfisca requirements':
     command     => "${venv_dir}/bin/pip3 install --upgrade -r openfisca/requirements.txt",
     cwd         => '/home/main/mes-aides-ui',
     environment => ['HOME=/home/main'],
-    notify      => [ Exec['startOrReload ma-web'], Service['openfisca'] ],
+    notify      => [ Exec['startOrReload ma-web']],#, Service['openfisca'] ],
     require     => [ Exec['update virtualenv pip'], Vcsrepo['/home/main/mes-aides-ui'] ],
     user        => 'main',
 }
-
+/*
 file { '/etc/init/openfisca.conf':
     ensure  => file,
     owner   => 'root',
@@ -324,3 +324,8 @@ if find_file("/opt/mes-aides/${instance_name}_use_ssl") or find_file('/opt/mes-a
         }
     }
 }
+
+*/
+
+
+
