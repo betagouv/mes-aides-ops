@@ -1,6 +1,13 @@
 
 $instance_name = 'metal'
 
+file { '/root/.ssh':
+    ensure => 'directory',
+    group  => 'root',
+    mode    => '600',
+    owner  => 'root',
+}
+
 file { '/root/.ssh/authorized_keys':
     content => template('mesaides/root_authorized_keys.erb'),
     ensure  => file,
@@ -73,6 +80,8 @@ file { "/etc/nginx/snippets/mes-aides-static.conf":
     mode    => '644',
 }
 
+# BOGUS
+/*
 file_line { '/etc/nginx/mime.types WOFF':
     ensure  => present,
     path    => '/etc/nginx/mime.types',
@@ -88,6 +97,7 @@ file_line { '/etc/nginx/mime.types TTF':
     line    => '    font/ttf                                         ttf;',
     require => [ Class['nginx'] ],
 }
+*/
 
 include '::mongodb::server'
 
@@ -193,16 +203,6 @@ exec { 'install node modules for mes-aides-ui':
     timeout     => 1800, # 30 minutes
     user        => 'main',
     notify      => [ Exec['setup setuid sandbox'] ],
-}
-
-# https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#alternative-setup-setuid-sandbox
-exec { 'setup setuid sandbox':
-    command => 'chown root:root node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox && chmod 4755 node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox && cp -p node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome_sandbox /usr/local/sbin/chrome-devel-sandbox',
-    path    => [ '/usr/local/bin', '/usr/bin', '/bin' ],
-    cwd     => '/home/main/mes-aides-ui',
-    user    => 'root',
-    creates => '/usr/local/sbin/chrome-devel-sandbox',
-    onlyif  => 'test -d node_modules/puppeteer'
 }
 
 exec { 'prestart mes-aides-ui':
