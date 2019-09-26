@@ -268,7 +268,7 @@ file { '/etc/nginx/conf.d/upstreams.conf':
 
 package { 'python3.7': }
 package { 'python3.7-dev': }
-package { 'python3.7-venv': }
+package { 'python3-venv': }
 
 $venv_dir = '/home/main/venv_python3.7'
 
@@ -279,7 +279,7 @@ exec { 'create virtualenv':
     user    => 'main',
     group   => 'main',
     creates => "${venv_dir}/bin/activate",
-    require => [ Package['python3.7'],  Package['python3.7-dev'], Package['python3.7-venv'] ],
+    require => [ Package['python3.7'],  Package['python3.7-dev'], Package['python3-venv'] ],
 }
 
 exec { 'update virtualenv pip':
