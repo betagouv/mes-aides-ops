@@ -21,14 +21,5 @@ define mesaides::nginx_config (
         include mesaides::generate_custom_dhparam
 
         ensure_resource('file', $webroot_path, {'ensure' => 'directory' })
-
-        letsencrypt::certonly { $name:
-            cron_success_command => 'service nginx reload',
-            domains              => [ $name, "www.${name}" ],
-            manage_cron          => true,
-            plugin               => 'webroot',
-            require              => [ File[$webroot_path], File["/etc/nginx/sites-enabled/${name}.conf"], Service['nginx'] ],
-            webroot_paths        => [ $webroot_path ],
-        }
     }
 }
